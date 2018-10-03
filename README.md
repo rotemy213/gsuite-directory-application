@@ -8,7 +8,7 @@ You will need:
 * Gsuite domain with API access enabled
 * Domain admin account
 
-If you don't have any of these follow the link <a href="https://developers.google.com/admin-sdk/directory/v1/quickstart/python">here</a>.
+If you don't have any of these follow the instructions <a href="https://developers.google.com/admin-sdk/directory/v1/quickstart/python">here</a>.
 
 ## Installation
 Install dependencies using pip:
