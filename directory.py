@@ -37,11 +37,11 @@ def get_users():
 	:return: List of current users
 	"""
 
-	service = create_directory_service('it_admin@atyrpharma.com')
+    # Account to act on behalf of
+	service = create_directory_service(${YOUR_CONFIG_HERE})
 
 	# Call the Admin SDK Directory API
-	results = service.users().list(domain='atyrpharma.com', query="isSuspended=false orgUnitPath='/Current Users'",
-	                               orderBy='familyName', projection='full').execute()
+	results = service.users().list(domain=${YOUR_CONFIG_HERE}, projection='full').execute()
 
 	users = results.get('users', [])
 	current_users = []
@@ -50,7 +50,7 @@ def get_users():
 		print('No users in the domain.')
 	else:
 		current_users.append(user)
-				
+
 	return current_users
 
 
@@ -60,7 +60,7 @@ def get_user(id):
 	:param id: user id in gsuite
 	:return: user object
 	"""
-	service = create_directory_service('it_admin@atyrpharma.com')
+	service = create_directory_service(${YOUR_CONFIG_HERE})
 	result = service.users().get(userKey=id, projection='full').execute()
 
 	return result
