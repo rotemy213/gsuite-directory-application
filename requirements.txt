@@ -1,0 +1,7 @@
+# requirements file for the directory app
+
+flask
+google-api-python-client
+oauth2client
+pyopenssl
+requests

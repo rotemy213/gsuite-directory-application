@@ -1,0 +1,167 @@
+<!-- html template for listing the users and displaying a user after their name is clicked on -->
+
+{% extends "index.html" %}
+{% block content %}
+
+	<!-- table of users -->
+	<table class="table" id="user-table"></table>
+	<!-- /table of users -->
+
+	<!-- User Modal -->
+	<div class="modal fade" id="userInfoModal" tabindex="-1" role="dialog" aria-labelledby="userModal"
+	     aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="userModalTitle"></h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<!-- Card -->
+					<div class="card card-cascade">
+
+						<!-- User image -->
+						<div class="view view-cascade overlay">
+							<img class="card-img-top" id="user-card-img-top" src="https://mdbootstrap.com/img/Photos/Others/men.jpg"
+							      alt="Card image cap">
+							<a>
+								<div class="mask rgba-white-slight"></div>
+							</a>
+						</div>
+
+						<!-- User Card content -->
+						<div class="card-body card-body-cascade text-center">
+
+							<!-- User's name -->
+							<h4 class="card-title" id="user-card-name"><strong></strong></h4>
+							<!-- User's job title -->
+							<h6 class="font-weight-bold indigo-text py-2" id="user-card-title"></h6>
+							<!-- User Info -->
+							<p class="card-text" id="user-work-phone"></p>
+							<p class="card-text" id="user-work-phone-ext"></p>
+							<p class="card-text" id="user-manager"></p>
+
+
+						</div>
+
+					</div>
+					<!-- Card -->
+				</div>
+				<div class="modal-footer">
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+
+		// get users that were passed from directory.get_users()
+		let users = {{ users|tojson|safe }}
+
+			// render table of users
+			$(document).ready(function () {
+				$.fn.dataTable.moment('MM-DD-YYYY');
+
+				$('#user-table').DataTable({
+					data: users,
+					columns: [{
+						title: "Name",
+						"data": "name.fullName",
+						"render": function (data, type, full, meta) {
+							// Link opens modal with user's information
+							return '<a href="#userInfoModal" data-toggle="modal" data-target="#userInfoModal" data-id="' + full.id + '">' + full.name.familyName + ', ' + full.name.givenName + '</a>';
+						}
+					},
+						{
+							title: "Job Title",
+							"data": "organizations[0].title",
+							"defaultContent": ""
+						},
+						{
+							title: "Work Phone",
+							"data": "phones[0].value"
+						},
+						{
+							title: "Email",
+							"data": "primaryEmail",
+							"render": function (data, type, full, meta) {
+							return '<a href="mailto:'+ full.primaryEmail +'">' + full.primaryEmail + '</a>';
+						}
+						},
+					]
+				});
+			});
+
+		/**
+		 * Prepares modal to be shown with user's information
+		 */
+		$('#userInfoModal').on('show.bs.modal', function (e) {
+
+			// get user's id
+			let userId = $(e.relatedTarget).data('id');
+
+			// get user's info
+			let user = findUser(users, 'id', userId);
+			$('#user-card-name').text(user.name.fullName);
+
+			// set user profile picture
+			$('#user-card-img-top').attr("src", user.thumbnailPhotoUrl);
+
+			// set user's job title
+			if (user.hasOwnProperty('organizations')) {
+				$('#user-card-title').text(user.organizations[0].title);
+			} else {
+				$('#user-card-title').text('No title');
+			}
+
+			// set user's phone number(s)
+			if (user.hasOwnProperty('phones')) {
+				$('#user-work-phone').text(user.phones[0].value);
+			} else {
+				$('#user-work-phone').text('No phone');
+			}
+
+			// set user's manager
+			if (user.hasOwnProperty('relations')) {
+				let managerEmail = user.relations[0].value;
+				let managerName = findUser(users,'email', managerEmail);
+				$('#user-manager').text('Manager: ' + managerName);
+			} else {
+				$('#user-manager').text('No manager')
+			}
+
+		});
+
+		$('#userInfoModal').on('hidden.bs.modal', function (e){
+			$('#user-card-img-top').attr("src", "");
+		});
+
+		/**
+		 * Gets users info from list of users
+		 * @param users: list of users
+		 * @param idType: type of id passed, either email or id
+		 * @param id: user id
+		 * @returns users[i]: user object
+		 */
+		function findUser(users, idType, id) {
+			if (idType === 'id'){
+				for (let i = 0; i < users.length; i++) {
+					if (users[i].id === id) {
+						return users[i];
+					}
+				}
+			} else if (idType === 'email') {
+				for (let i = 0; i < users.length; i++) {
+					if (users[i].primaryEmail === id) {
+						return users[i].name.fullName;
+					}
+				}
+			}
+
+		}
+
+	</script>
+
+{% endblock %}
