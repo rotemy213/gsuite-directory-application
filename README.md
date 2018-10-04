@@ -32,6 +32,6 @@ Application will run at 127.0.0.1:5000
 
 ## Screenshots
 ### List View
-
+![alt text](./screenshots/gsuite-list.png "List View")
 ### User View
 ![alt text](./screenshots/gsuite-dir-user.png "User View")
