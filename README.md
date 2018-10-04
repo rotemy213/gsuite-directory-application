@@ -1,7 +1,7 @@
 # Gsuite Directory Application
 
 ## About
-This is a simple directory web app specifically for Gsuite.
+This is a directory web app specifically for Gsuite.
 
 ## Getting Started
 You will need:
@@ -29,3 +29,9 @@ set FLASK_APP=hello
 flask run
 ```
 Application will run at 127.0.0.1:5000
+
+## Screenshots
+### List View
+
+### User View
+![alt text](./screenshots/gsuite-dir-user.png "User View")
