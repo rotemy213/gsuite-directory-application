@@ -1,7 +1,7 @@
 # Gsuite Directory Application
 
 ## About
-This is a directory web app specifically for Gsuite.
+This is a directory web app for displaying users in a Gsuite domain.
 
 ## Getting Started
 You will need:
